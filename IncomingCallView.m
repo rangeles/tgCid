@@ -5,19 +5,26 @@
 
 @implementation IncomingCallView
 
-- (id)initWithFrame:(CGRect)frame resource:(NSBundle *)resource {
-    if ((self = [super initWithFrame:frame])) {
+- (id)initWithDefaultFrameAndBundle:(NSBundle *)resourceBundle {
+    if ((self = [super initWithFrame:CGRectMake(0, 52, 320, 42)])) {
         [self setOpaque:NO];
         isLabeled = NO;
 
-        pending = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        pending = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         [self addSubview:pending];
         [pending centerBothAxes];
 
-        caller = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:[[UIImage imageNamed:@"callerIcon" inBundle:resource] autorelease]];
+        UIImage *callerIcon = [UIImage imageNamed:@"callerIcon" inBundle:resourceBundle];
+        UIImage *locationIcon = [UIImage imageNamed:@"locationIcon" inBundle:resourceBundle];
+
+        caller = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:callerIcon];
         [self addSubview:caller];
-        location = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:[[UIImage imageNamed:@"locationIcon" inBundle:resource] autorelease]];
+
+        location = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:locationIcon];
         [self addSubview:location];
+
+        [callerIcon release];
+        [locationIcon release];
     }
 
     return self;

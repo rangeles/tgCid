@@ -1,6 +1,5 @@
-#import "CFCoreTelephony.h"
-#import "IncomingCallView.h"
 #import "CallManager.h"
+#import "IncomingCallView.h"
 
 @implementation CallManager
 
@@ -19,16 +18,23 @@
 }
 
 - (void)setupForController:(id)aController withCall:(CTCallRef)call {
-    NSString *number = CTCallCopyAddress(NULL, call);
-    view = [[IncomingCallView alloc] initWithFrame:CGRectMake(0, 52, 320, 42)];
+    if (controller != nil) {
+        [self _teardown];
+    }
+
+    NSString *address = CTCallCopyAddress(NULL, call);
+    NSString *countryCode = CTCallCopyCountryCode(NULL, call);
+
+    view = [[IncomingCallView alloc] initWithDefaultFrameAndBundle:resource];
+    controller = aController;
     // Set operation for number
     [number release];
+    }
 }
 
 - (void)_teardown {
-    controller = nil;
     [view release];
-    view = nil;
+    controller = view = nil;
 }
 
 - (void)teardownForController:(id)aController {
