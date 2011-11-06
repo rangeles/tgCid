@@ -1,0 +1,9 @@
+Package: com.rangeles.tgcid
+Name: tgCid
+Depends: mobilesubstrate, firmware (>=5.0)
+Version: 0.0.1-dev
+Architecture: iphoneos-arm
+Description: tgCid performs a reverse phone lookup for numbers that are not identified by your contact list. Currently limited to U.S. phone numbers only.
+Maintainer: Ron Angeles
+Author: Ron Angeles
+Section: Tweaks
