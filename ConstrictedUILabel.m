@@ -4,12 +4,12 @@
 
 @synthesize constrictedWidth, constrictedHeight;
 
-- (id)init {
-    if ((self = [super init])) {
+- (id)initWithFrame:(CGRect)frame {
+    if ((self = [super initWithFrame:frame])) {
         constrictedWidth = constrictedHeight = CGFLOAT_MAX;
         [self setAdjustsFontSizeToFitWidth:YES];
         [self setBackgroundColor:[UIColor clearColor]];
-        [self setTextColor:[UIColor clearColor]];
+        [self setTextColor:[UIColor whiteColor]];
         [self setFont:[UIFont fontWithName:@"Helvetica" size:22]];
     }
 
@@ -17,14 +17,14 @@
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    CGSize ret = [super sizeThatFits:size];
-    if (ret.width > constrictedWidth) {
-        ret = CGSizeMake(constrictedWidth, ret.height);
+    CGSize orig = [super sizeThatFits:size];
+    if (orig.width > constrictedWidth) {
+        orig = CGSizeMake(constrictedWidth, orig.height);
     }
-    if (ret.height > constrictedHeight) {
-        ret = CGSizeMake(ret.width, constrictedHeight);
+    if (orig.height > constrictedHeight) {
+        orig = CGSizeMake(orig.width, constrictedHeight);
     }
-    return ret;
+    return orig;
 }
 
 @end
