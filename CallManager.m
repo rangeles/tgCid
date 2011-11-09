@@ -12,42 +12,42 @@
 }
 
 - (void)dealloc {
-    [self _teardown];
+    [view release];
     [resource release];
     [super dealloc];
 }
 
 - (void)setupForController:(id)aController withCall:(CTCallRef)call {
-    if (controller != nil) {
-        [self _teardown];
-    }
-
     NSString *address = CTCallCopyAddress(NULL, call);
     NSString *countryCode = CTCallCopyCountryCode(NULL, call);
-
-    view = [[IncomingCallView alloc] initWithDefaultFrameAndBundle:resource];
-    controller = aController;
-    // Set operation for number
-    [number release];
+    if (address != nil && countryCode != nil && controller == nil) {
+        // U.S. MCCs = 310-316 (inclusive)
+        if ([countryCode integerValue] >= 310 && [countryCode integerValue] <= 316) {
+            // Prepare a nsurlrequest
+            view = [[IncomingCallView alloc] initWithDefaultFrameAndBundle:resource];
+            controller = aController;
+        }
     }
-}
-
-- (void)_teardown {
-    [view release];
-    controller = view = nil;
+    [address release];
+    [countryCode release];
 }
 
 - (void)teardownForController:(id)aController {
     if (controller == aController) {
-        [self _teardown];
+        [view release];
+        controller = view = nil;
     }
+}
+
+- (void)demo {
+    [view setCaller:@"John Smith" andLocation:@"United States"];
 }
 
 - (void)setForController:(id)aController ABUID:(NSNumber *)abuid {
     if (abuid != nil) {
         [self teardownForController:aController];
     } else if (controller == aController) {
-        // start operation
+        [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(demo) userInfo:nil repeats:NO];
     }
 }
 

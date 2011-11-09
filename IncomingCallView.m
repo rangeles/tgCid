@@ -39,10 +39,15 @@
 
 - (void)didMoveToSuperview {
     if (isLabeled) {
-        [pending removeFromSuperview];
         [self fadeInSubview:0];
     } else {
         [pending startAnimating];
+    }
+}
+
+- (void)layoutSubviews {
+    for (UIView *subview in [self subviews]) {
+        [subview centerBothAxes];
     }
 }
 
@@ -54,6 +59,21 @@
 - (void)fadeOutSubview:(NSUInteger)index {
     UIView *current = [[self subviews] objectAtIndex:index];
     [UIView animateWithDuration:1 delay:1 options:0 animations:^{ [current setAlpha:0]; } completion:^(BOOL finished){ if (finished) [self fadeInSubview:(index+1)%[[self subviews] count]]; }];
+}
+
+// Looks rather bloated
+- (void)setCaller:(NSString *)aCaller andLocation:(NSString *)aLocation {
+    [caller setLabel:aCaller];
+    //[caller sizeToFit];
+    [location setLabel:aLocation];
+    //[location sizeToFit];
+
+    [pending stopAnimating];
+    [pending removeFromSuperview];
+
+    isLabeled = YES;
+    [self setNeedsLayout];
+    [self fadeInSubview:0];
 }
 
 @end

@@ -8,9 +8,9 @@
     IncomingCallView *view;
 }
 - (void)setupForController:(id)controller withCall:(CTCallRef)call;
-- (void)_teardown;
 - (void)teardownForController:(id)controller;
 - (void)setForController:(id)controller ABUID:(NSNumber *)abuid;
 - (UIView *)viewForController:(id)controller;
 - (BOOL)hasViewForController:(id)controller;
+- (void)demo;
 @end
