@@ -6,25 +6,23 @@
 @implementation IncomingCallView
 
 - (id)initWithDefaultFrameAndBundle:(NSBundle *)resourceBundle {
-    if ((self = [super initWithFrame:CGRectMake(0, 52, 320, 42)])) {
-        [self setOpaque:NO];
+    if ((self = [super initWithFrame:CGRectMake(3, 52, 314, 42)])) {
         isLabeled = NO;
 
         pending = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         [self addSubview:pending];
-        [pending centerBothAxes];
 
         UIImage *callerIcon = [UIImage imageNamed:@"callerIcon" inBundle:resourceBundle];
-        UIImage *locationIcon = [UIImage imageNamed:@"locationIcon" inBundle:resourceBundle];
-
         caller = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:callerIcon];
         [self addSubview:caller];
+        [callerIcon release];
 
+        UIImage *locationIcon = [UIImage imageNamed:@"locationIcon" inBundle:resourceBundle];
         location = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:locationIcon];
         [self addSubview:location];
-
-        [callerIcon release];
         [locationIcon release];
+
+        [self setNeedsLayout];
     }
 
     return self;
@@ -61,12 +59,9 @@
     [UIView animateWithDuration:1 delay:1 options:0 animations:^{ [current setAlpha:0]; } completion:^(BOOL finished){ if (finished) [self fadeInSubview:(index+1)%[[self subviews] count]]; }];
 }
 
-// Looks rather bloated
 - (void)setCaller:(NSString *)aCaller andLocation:(NSString *)aLocation {
     [caller setLabel:aCaller];
-    //[caller sizeToFit];
     [location setLabel:aLocation];
-    //[location sizeToFit];
 
     [pending stopAnimating];
     [pending removeFromSuperview];

@@ -29,10 +29,9 @@
 }
 
 - (void)layoutSubviews {
-    [image centerHorizontalAxis];
-
-    [label sizeToFit];
-    [label centerHorizontalAxis];
+    for (UIView *subview in [self subviews]) {
+        [subview centerHorizontalAxis];
+    }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -41,6 +40,8 @@
 
 - (void)setLabel:(NSString *)aLabel {
     [label setText:aLabel];
+    [label sizeToFit];
+    [self sizeToFit];
 }
 
 @end
