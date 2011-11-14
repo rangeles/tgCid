@@ -6,9 +6,10 @@ static CallManager *manager;
 
 CHDeclareClass(MPIncomingPhoneCallController);
 
-CHOptimizedMethod(1, self, void, MPIncomingPhoneCallController, _handleCallerIDEvent, CTCallRef, call) {
-    [manager setupForController:self withCall:call];
-    CHSuper(1, MPIncomingPhoneCallController, _handleCallerIDEvent, call);
+CHOptimizedMethod(1, self, id, MPIncomingPhoneCallController, initWithCall, CTCallRef, call) {
+    id orig = CHSuper(1, MPIncomingPhoneCallController, initWithCall, call);
+    [manager setupForController:orig withCall:call];
+    return orig;
 }
 
 CHOptimizedMethod(0, self, void, MPIncomingPhoneCallController, dealloc) {
@@ -37,7 +38,7 @@ CHOptimizedMethod(1, self, Class, SBPluginManager, loadPluginBundle, NSBundle *,
 
     if ([[bundle bundleIdentifier] isEqualToString:@"com.apple.mobilephone.incomingcall"] && [bundle isLoaded]) {
         CHLoadLateClass(MPIncomingPhoneCallController);
-        CHHook(1, MPIncomingPhoneCallController, _handleCallerIDEvent);
+        CHHook(1, MPIncomingPhoneCallController, initWithCall);
         CHHook(0, MPIncomingPhoneCallController, dealloc);
         CHHook(0, MPIncomingPhoneCallController, newTopBar);
         CHHook(3, MPIncomingPhoneCallController, updateLCDWithName, label, breakPoint);
