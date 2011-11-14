@@ -9,7 +9,7 @@
     IncomingCallView *view;
     NSURLRequest *request;
 }
-+ (NSURLRequest *)prepareRequestForNumber:(NSString *)number;
++ (NSURLRequest *)createRequestForNumber:(NSString *)number;
 - (void)setupForController:(id)controller withCall:(CTCallRef)call;
 - (void)teardownForController:(id)controller;
 - (void)setForController:(id)controller ABUID:(NSNumber *)abuid;

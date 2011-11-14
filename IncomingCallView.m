@@ -12,15 +12,11 @@
         pending = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         [self addSubview:pending];
 
-        UIImage *callerIcon = [UIImage imageNamed:@"callerIcon" inBundle:resourceBundle];
-        caller = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:callerIcon];
+        caller = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:[UIImage imageNamed:@"callerIcon" inBundle:resourceBundle]];
         [self addSubview:caller];
-        [callerIcon release];
 
-        UIImage *locationIcon = [UIImage imageNamed:@"locationIcon" inBundle:resourceBundle];
-        location = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:locationIcon];
+        location = [[ImageLabel alloc] initWithFrame:[self bounds] withImage:[UIImage imageNamed:@"locationIcon" inBundle:resourceBundle]];
         [self addSubview:location];
-        [locationIcon release];
 
         [self setNeedsLayout];
     }
