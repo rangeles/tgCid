@@ -70,7 +70,47 @@
     if (abuid != nil) {
         [self teardownForController:aController];
     } else if (controller == aController) {
-        //[NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){ if (data != nil) { } }];
+        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *rData, NSError *rError){
+            NSString *caller = @"Unknown";
+            NSString *location = @"Unknown";
+
+            if (rData != nil) {
+                NSError *jError;
+                NSDictionary *jData = [NSJSONSerialization JSONObjectWithData:rData options:0 error:&jError];
+
+                if (jData != nil) {
+                    NSDictionary *firstListing = [[jData objectForKey:@"listings"] objectAtIndex:0];
+                    NSString *jCaller = [firstListing objectForKey:@"displayname"];
+                    NSDictionary *jAddress = [firstListing objectForKey:@"address"];
+                    NSString *jCity = [jAddress objectForKey:@"city"];
+                    NSString *jState = [jAddress objectForKey:@"state"];
+
+                    if (jCaller != nil) {
+                        caller = jCaller;
+                    }
+
+                    if (jCity != nil && jState != nil) {
+                        location = [NSString stringWithFormat:@"%@, %@", jCity, jState];
+                    }
+                }
+            }
+
+            SEL selector;
+            NSMethodSignature *signature;
+            NSInvocation *invocation;
+
+            selector = @selector(setCaller:andLocation:);
+            signature = [IncomingCallView instanceMethodSignatureForSelector:selector];
+            invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+            [invocation setSelector:selector];
+            [invocation setTarget:view];
+            [invocation setArgument:&caller atIndex:2];
+            [invocation setArgument:&location atIndex:3];
+            [invocation retainArguments];
+
+            [invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
+        }];
     }
 }
 
