@@ -26,9 +26,9 @@
 
 - (void)dealloc {
     [pending release];
-	[caller release];
-	[location release];
-	[super dealloc];
+    [caller release];
+    [location release];
+    [super dealloc];
 }
 
 - (void)didMoveToSuperview {
