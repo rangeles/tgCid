@@ -13,12 +13,20 @@
     char secretBuffer[256];
     unsigned char md5Buffer[16];
 
-    snprintf(udidBuffer, sizeof(udidBuffer), "%08x%08x%08x%08x%08x", arc4random(), arc4random(), arc4random(), arc4random(), arc4random());
+    int i, length;
+    for (i = length = 0; i < 5; i++) {
+        length += sprintf(udidBuffer + length, "%08x", arc4random());
+    }
 
-    int secretBufferLen = snprintf(secretBuffer, sizeof(secretBuffer), "app_id=%sapp_ver=%sdevice_id=%snonce=%ff3e0ed061a7c4fe48676ddd25838d40c", appID, appVer, udidBuffer, nonce);
-    CC_MD5(secretBuffer, secretBufferLen, md5Buffer);
+    length = sprintf(secretBuffer, "app_id=%sapp_ver=%sdevice_id=%snonce=%ff3e0ed061a7c4fe48676ddd25838d40c", appID, appVer, udidBuffer, nonce);
+    CC_MD5(secretBuffer, length, md5Buffer);
 
-    NSString *urlString = [NSString stringWithFormat:@"http://gadgets.whitepages.com/wpapi/1.0/reverse_phone?app_ver=%s&device_id=%s&nonce=%f&app_id=%s&phone=%@&format=json&secret=%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", appVer, udidBuffer, nonce, appID, aNumber, md5Buffer[0], md5Buffer[1], md5Buffer[2], md5Buffer[3], md5Buffer[4], md5Buffer[5], md5Buffer[6], md5Buffer[7], md5Buffer[8], md5Buffer[9], md5Buffer[10], md5Buffer[11], md5Buffer[12], md5Buffer[13], md5Buffer[14], md5Buffer[15]];
+    for (i = length = 0; i < 16; i++) {
+        length += sprintf(secretBuffer + length, "%02X", md5Buffer[i]);
+    }
+
+    NSString *urlString = [NSString stringWithFormat:@"http://gadgets.whitepages.com/wpapi/1.0/reverse_phone?app_ver=%s&device_id=%s&nonce=%f&app_id=%s&phone=%@&format=json&secret=%s", appVer, udidBuffer, nonce, appID, aNumber, secretBuffer];
+
     NSURL *url = [NSURL URLWithString:urlString];
 
     NSURLRequest *urlRequest = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:3];
