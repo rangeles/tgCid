@@ -5,3 +5,4 @@ Build instructions
 3. Copy CaptainHook's installation into theos's include/ directory
 4. Export a THEOS environment variable pointing to theos's installation directory
 5. After that, refer to theos's documentation for builds and packaging.
+6. (optional) Adding a DEBUG=1 to make should add logging statements.

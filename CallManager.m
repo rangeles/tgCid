@@ -1,4 +1,5 @@
 #import <CommonCrypto/CommonDigest.h>
+#import "Debug.h"
 #import "CallManager.h"
 #import "IncomingCallView.h"
 
@@ -78,11 +79,13 @@
     if (abuid != nil) {
         [self teardownForController:aController];
     } else if (controller == aController) {
+        DEBUG_LOG((@"tgCid: Lookup request to be fetched: %@", request));
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *rData, NSError *rError){
             NSString *caller = @"Unknown";
             NSString *location = @"Unknown";
 
             if (rData != nil) {
+                DEBUG_LOG((@"tgCid: Lookup request returned: %@", [[[NSString alloc] initWithData:rData encoding:NSUTF8StringEncoding] autorelease]));
                 NSError *jError;
                 NSDictionary *jData = [NSJSONSerialization JSONObjectWithData:rData options:0 error:&jError];
 
@@ -101,6 +104,8 @@
                         location = [NSString stringWithFormat:@"%@, %@", jCity, jState];
                     }
                 }
+            } else {
+                DEBUG_LOG((@"tgCid: Lookup request errored: %@", rError));
             }
 
             SEL selector;
