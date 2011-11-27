@@ -1,0 +1,7 @@
+Build instructions
+
+1. Clone theos from https://github.com/DHowett/theos
+2. Clone CaptainHook from https://github.com/rpetrich/CaptainHook
+3. Copy CaptainHook's installation into theos's include/ directory
+4. Export a THEOS environment variable pointing to theos's installation directory
+5. After that, refer to theos's documentation for builds and packaging.
