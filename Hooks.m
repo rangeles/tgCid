@@ -48,8 +48,11 @@ CHOptimizedMethod(1, self, Class, SBPluginManager, loadPluginBundle, NSBundle *,
 }
 
 CHConstructor {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     manager = [[CallManager alloc] init];
 
     CHLoadLateClass(SBPluginManager);
     CHHook(1, SBPluginManager, loadPluginBundle);
+
+    [pool drain];
 }
