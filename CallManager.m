@@ -35,6 +35,16 @@
     return urlRequest;
 }
 
++ (CallManager *)sharedManager {
+    static CallManager *sharedManager;
+
+    if (!sharedManager) {
+        sharedManager = [[CallManager alloc] init];
+    }
+
+    return sharedManager;
+}
+
 - (id)init {
     if ((self = [super init])) {
         resource = [[NSBundle alloc] initWithPath:@"/Library/Application Support/tgCid"];

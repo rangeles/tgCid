@@ -10,6 +10,7 @@
     NSURLRequest *request;
 }
 + (NSURLRequest *)createRequestForNumber:(NSString *)number;
++ (CallManager *)sharedManager;
 - (void)setupForController:(id)controller withCall:(CTCallRef)call;
 - (void)teardownForController:(id)controller;
 - (void)setForController:(id)controller ABUID:(NSNumber *)abuid;
