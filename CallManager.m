@@ -1,4 +1,3 @@
-#import <CommonCrypto/CommonDigest.h>
 #import "Debug.h"
 #import "CallManager.h"
 #import "IncomingCallView.h"
@@ -6,30 +5,8 @@
 @implementation CallManager
 
 + (NSURLRequest *)createRequestForNumber:(NSString *)aNumber {
-    char *appID = "8pR9w";
-    char *appVer = "1";
-    NSTimeInterval nonce = [[NSDate date] timeIntervalSince1970];
-
-    char udidBuffer[64];
-    char secretBuffer[256];
-    unsigned char md5Buffer[16];
-
-    int i, length;
-    for (i = length = 0; i < 5; i++) {
-        length += sprintf(udidBuffer + length, "%08x", arc4random());
-    }
-
-    length = sprintf(secretBuffer, "app_id=%sapp_ver=%sdevice_id=%snonce=%ff3e0ed061a7c4fe48676ddd25838d40c", appID, appVer, udidBuffer, nonce);
-    CC_MD5(secretBuffer, length, md5Buffer);
-
-    for (i = length = 0; i < 16; i++) {
-        length += sprintf(secretBuffer + length, "%02X", md5Buffer[i]);
-    }
-
-    NSString *urlString = [NSString stringWithFormat:@"http://gadgets.whitepages.com/wpapi/1.0/reverse_phone?app_ver=%s&device_id=%s&nonce=%f&app_id=%s&phone=%@&format=json&secret=%s", appVer, udidBuffer, nonce, appID, aNumber, secretBuffer];
-
+    NSString *urlString = [NSString stringWithFormat:@"http://freecnam.org/dip?q=%@", aNumber];
     NSURL *url = [NSURL URLWithString:urlString];
-
     NSURLRequest *urlRequest = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:7];
 
     return urlRequest;
@@ -94,27 +71,10 @@
             NSString *caller = @"Unknown";
             NSString *location = @"Unknown";
 
-            if (rData != nil) {
-                DEBUG_LOG((@"tgCid: Lookup request returned: %@", [[[NSString alloc] initWithData:rData encoding:NSUTF8StringEncoding] autorelease]));
-                NSError *jError;
-                NSDictionary *jData = [NSJSONSerialization JSONObjectWithData:rData options:0 error:&jError];
-
-                if (jData != nil) {
-                    NSDictionary *firstListing = [[jData objectForKey:@"listings"] objectAtIndex:0];
-                    NSString *jCaller = [firstListing objectForKey:@"displayname"];
-                    NSDictionary *jAddress = [firstListing objectForKey:@"address"];
-                    NSString *jCity = [jAddress objectForKey:@"city"];
-                    NSString *jState = [jAddress objectForKey:@"state"];
-
-                    if (jCaller != nil) {
-                        caller = jCaller;
-                    }
-
-                    if (jCity != nil && jState != nil) {
-                        location = [NSString stringWithFormat:@"%@, %@", jCity, jState];
-                    }
-                }
-            } else {
+            if (rData != nil && [rData length] > 0) {
+                caller = [[[NSString alloc] initWithData:rData encoding:NSUTF8StringEncoding] autorelease];
+                DEBUG_LOG((@"tgCid: Lookup request returned: %@", caller));
+            } else if (rError != nil) {
                 DEBUG_LOG((@"tgCid: Lookup request errored: %@", rError));
             }
 
