@@ -25,6 +25,7 @@
 }
 
 - (void)dealloc {
+    [locationFallback release];
     [pending release];
     [caller release];
     [location release];
@@ -55,9 +56,14 @@
     [UIView animateWithDuration:1 delay:1 options:0 animations:^{ [current setAlpha:0]; } completion:^(BOOL finished){ if (finished) [self fadeInSubview:(index+1)%[[self subviews] count]]; }];
 }
 
-- (void)setCaller:(NSString *)aCaller andLocation:(NSString *)aLocation {
+- (void)setLocationFallback:(NSString *)aLocation {
+    [locationFallback release];
+    locationFallback = [[NSString alloc] initWithString:aLocation];
+}
+
+- (void)setCallerAndFinalize:(NSString *)aCaller {
     [caller setLabel:aCaller];
-    [location setLabel:aLocation];
+    [location setLabel:locationFallback];
 
     [pending stopAnimating];
     [pending removeFromSuperview];

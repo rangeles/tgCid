@@ -1,6 +1,7 @@
 #import <CaptainHook/CaptainHook.h>
 #import "MPIncomingPhoneCallController.h"
 #import "CallManager.h"
+#import "IncomingCallView.h"
 
 CHDeclareClass(MPIncomingPhoneCallController);
 
@@ -24,6 +25,7 @@ CHOptimizedMethod(0, self, UIView *, MPIncomingPhoneCallController, newTopBar) {
 
 CHOptimizedMethod(3, self, void, MPIncomingPhoneCallController, updateLCDWithName, NSString *, name, label, NSString *, aLabel, breakPoint, unsigned, aBreakPoint) {
     if ([[CallManager sharedManager] hasViewForController:self]) {
+        [[[CallManager sharedManager] viewForController:self] setLocationFallback:aLabel];
         aLabel = @" ";
     }
     CHSuper(3, MPIncomingPhoneCallController, updateLCDWithName, name, label, aLabel, breakPoint, aBreakPoint);

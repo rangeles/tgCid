@@ -69,7 +69,6 @@
         DEBUG_LOG((@"tgCid: Lookup request to be fetched: %@", request));
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *rData, NSError *rError){
             NSString *caller = @"Unknown";
-            NSString *location = @"Unknown";
 
             if (rData != nil && [rData length] > 0) {
                 caller = [[[NSString alloc] initWithData:rData encoding:NSUTF8StringEncoding] autorelease];
@@ -78,21 +77,7 @@
                 DEBUG_LOG((@"tgCid: Lookup request errored: %@", rError));
             }
 
-            SEL selector;
-            NSMethodSignature *signature;
-            NSInvocation *invocation;
-
-            selector = @selector(setCaller:andLocation:);
-            signature = [IncomingCallView instanceMethodSignatureForSelector:selector];
-            invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-            [invocation setSelector:selector];
-            [invocation setTarget:view];
-            [invocation setArgument:&caller atIndex:2];
-            [invocation setArgument:&location atIndex:3];
-            [invocation retainArguments];
-
-            [invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
+            [view performSelectorOnMainThread:@selector(setCallerAndFinalize:) withObject:caller waitUntilDone:NO];
         }];
     }
 }

@@ -14,6 +14,6 @@
 - (void)setupForController:(id)controller withCall:(CTCallRef)call;
 - (void)teardownForController:(id)controller;
 - (void)setForController:(id)controller ABUID:(NSNumber *)abuid;
-- (UIView *)viewForController:(id)controller;
+- (IncomingCallView *)viewForController:(id)controller;
 - (BOOL)hasViewForController:(id)controller;
 @end
